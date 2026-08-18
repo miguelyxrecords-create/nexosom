@@ -1,0 +1,12 @@
+NEXOSOM - PRONTO PARA DEPLOY
+
+1) Esta pasta pode ir para um GitHub PRIVADO.
+2) O arquivo real backend/.env NÃO está neste pacote.
+3) Render: use render.yaml e informe MONGODB_URI + ADMIN_EMAIL quando solicitado.
+4) Depois copie a URL do Render.
+5) Netlify: conecte o mesmo repositório e crie:
+   NEXOSOM_API_ORIGIN=https://SUA-URL-DO-RENDER.onrender.com
+6) Google Cloud: adicione a URL https://SEU-SITE.netlify.app em Authorized JavaScript origins.
+7) Teste login, publicação e Smart Link.
+
+Detalhes completos: DEPLOY.md

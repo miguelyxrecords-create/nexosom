@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Comunidade para artistas independentes divulgarem lançamentos, criarem Smart Links e encontrarem colaboradores." />
+  <title>NexoSom — Comunidade para artistas independentes</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/#inicio"><span class="brand-mark"><span></span><span></span><span></span></span><strong>NexoSom</strong></a>
+    <nav class="desktop-nav">
+      <a href="/#inicio">Início</a><a href="/#descobrir">Descobrir</a><a href="/#colaboracoes">Colaborações</a><a href="/#artistas">Artistas</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn ghost admin-only hidden" id="adminBtn">Admin</button>
+      <button class="btn ghost" id="accountBtn">Entrar</button>
+      <button class="btn primary" data-open-release>+ Divulgar música</button>
+    </div>
+  </header>
+
+  <main id="mainSite">
+    <section class="hero section" id="inicio">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span> Comunidade de artistas independentes</div>
+        <h1>Sua música merece <span>ser descoberta.</span></h1>
+        <p>Divulgue lançamentos, reúna seus links, encontre músicos para colaborar e construa sua presença em uma comunidade feita para quem cria.</p>
+        <div class="hero-actions">
+          <button class="btn primary large" data-open-release>Divulgar meu lançamento</button>
+          <a class="btn secondary large" href="#descobrir">Explorar músicas</a>
+        </div>
+        <div class="hero-proof">
+          <div><strong id="statArtists">—</strong><span>artistas</span></div>
+          <div><strong id="statReleases">—</strong><span>lançamentos</span></div>
+          <div><strong>Smart Links</strong><span>públicos</span></div>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="now-card">
+          <div class="mini-cover cover-a"><span class="cover-kicker">DIVULGUE</span><b>SUA<br>MÚSICA</b></div>
+          <div class="now-meta">
+            <span class="live-dot">COMUNIDADE</span><h3>Seu lançamento</h3><p>Spotify • YouTube • Deezer</p>
+            <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="platform-row"><span class="chip">Smart Link</span><span class="chip">Analytics</span></div>
+          </div>
+        </div>
+        <div class="floating-note note-one"><span>🔒</span><div><b>Login verificado</b><small>Conta Google verificada</small></div></div>
+        <div class="floating-note note-two"><span>🤝</span><div><b>Colaborações</b><small>Conecte artistas</small></div></div>
+      </div>
+    </section>
+
+    <section class="section discovery" id="descobrir">
+      <div class="section-heading"><div><span class="eyebrow">DESCUBRA NOVOS SONS</span><h2>Lançamentos da comunidade</h2></div><button class="btn secondary small" data-open-release>Enviar música</button></div>
+      <div class="filters">
+        <button class="filter active" data-genre="Todos">Todos</button><button class="filter" data-genre="Trap">Trap</button>
+        <button class="filter" data-genre="Funk">Funk</button><button class="filter" data-genre="Rap">Rap</button>
+        <button class="filter" data-genre="Pop">Pop</button><button class="filter" data-genre="Rock">Rock</button>
+        <button class="filter" data-genre="Eletrônica">Eletrônica</button>
+        <div class="search-wrap"><input type="search" id="musicSearch" placeholder="Buscar música ou artista..." /></div>
+      </div>
+      <div class="release-grid" id="releaseGrid"><div class="empty-card">Carregando lançamentos...</div></div>
+    </section>
+
+    <section class="section smart-section">
+      <div class="smart-copy">
+        <span class="eyebrow">SMART LINK PÚBLICO</span>
+<h2>Um link para todas as plataformas.</h2>
+
+<p>
+  Cada música ganha um link público para compartilhar.
+  Seus fãs escolhem onde ouvir e você acompanha os cliques em cada plataforma.
+</p>
+
+<div class="feature-list">
+  <div><span>✓</span> Link público exclusivo para sua música</div>
+  <div><span>✓</span> Estatísticas de cliques por plataforma</div>
+  <div><span>✓</span> Capa personalizada do lançamento</div>
+  <div><span>✓</span> Divulgação agendada</div>
+</div>
+
+<button class="btn primary" data-open-release>Criar Smart Link</button>
+      </div>
+      <div class="phone-shell"><div class="phone-top"></div><div class="phone-content">
+        <div class="smart-cover cover-b"><span>SUA MÚSICA</span></div><h3>Smart Link</h3><p>Escolha onde ouvir</p>
+        <button class="stream-btn"><b>◉ Spotify</b><span>Ouvir →</span></button><button class="stream-btn"><b>▶ YouTube</b><span>Ouvir →</span></button><button class="stream-btn"><b>▥ Deezer</b><span>Ouvir →</span></button>
+      </div></div>
+    </section>
+
+    <section class="section collab-section" id="colaboracoes">
+      <div class="section-heading"><div><span class="eyebrow">FAÇA CONEXÕES</span><h2>Encontre a pessoa certa para sua próxima música.</h2></div><button class="btn primary small" data-open-collab>+ Publicar colaboração</button></div>
+      <div class="collab-grid" id="collabGrid"><div class="empty-card">Carregando...</div></div>
+    </section>
+
+    <section class="section artists-section" id="artistas">
+      <div class="section-heading"><div><span class="eyebrow">COMUNIDADE</span><h2>Artistas cadastrados</h2></div></div>
+      <div class="artist-grid" id="artistGrid"></div>
+    </section>
+
+    <section class="section cta-section"><div><span class="eyebrow">SEU PRÓXIMO PÚBLICO PODE ESTAR AQUI</span><h2>Publique. Conecte. Cresça.</h2><p>Entre com Google e publique seu próximo lançamento.</p></div><button class="btn primary large" data-open-release>Divulgar minha música</button></section>
+  </main>
+
+  <section id="smartPublicPage" class="smart-public hidden"></section>
+
+  <footer id="siteFooter"><a class="brand" href="/"><span class="brand-mark"><span></span><span></span><span></span></span><strong>NexoSom</strong></a><p>Comunidade independente para músicos, produtores e criadores.</p><small>O site não distribui nem hospeda áudio.</small></footer>
+
+  <div class="modal" id="loginModal" aria-hidden="true"><div class="modal-backdrop" data-close></div><div class="modal-card login-card">
+    <button class="modal-close" data-close>×</button><div class="modal-head"><span class="eyebrow">ENTRAR</span><h2>Acesse com Google</h2><p>Entre com sua conta Google para continuar.</p></div>
+    <div id="googleButton" class="google-button-wrap"></div><p id="googleConfigWarning" class="config-warning hidden">Login temporariamente indisponível. Tente novamente mais tarde.</p>
+  </div></div>
+
+  <div class="modal" id="releaseModal" aria-hidden="true"><div class="modal-backdrop" data-close></div><div class="modal-card modal-large">
+    <button class="modal-close" data-close>×</button><div class="modal-head"><span class="eyebrow">DIVULGAR LANÇAMENTO</span><h2>Cadastre sua música</h2><p>Envie a capa e informe os links onde a música já está disponível.</p></div>
+    <form id="releaseForm" enctype="multipart/form-data">
+      <div class="form-grid">
+        <label><span>Nome da música *</span><input name="title" required maxlength="120"></label>
+        <label><span>Nome artístico *</span><input name="artist" required maxlength="100"></label>
+        <label><span>Gênero *</span><select name="genre" required><option value="">Selecione</option><option>Trap</option><option>Funk</option><option>Rap</option><option>Pop</option><option>Rock</option><option>Eletrônica</option><option>R&B</option><option>Outro</option></select></label>
+        <label><span>Cidade</span><input name="city" maxlength="80" placeholder="Campinas - SP"></label>
+        <label class="full"><span>Capa * — JPG, PNG ou WEBP até 5 MB</span><input name="cover" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+        <label class="full"><span>Descrição</span><textarea name="description" rows="3" maxlength="1200"></textarea></label>
+        <label><span>Spotify</span><input name="spotify" type="url" placeholder="https://..."></label>
+        <label><span>YouTube</span><input name="youtube" type="url" placeholder="https://..."></label>
+        <label><span>Deezer</span><input name="deezer" type="url" placeholder="https://..."></label>
+        <label><span>Apple Music</span><input name="apple_music" type="url" placeholder="https://..."></label>
+        <label class="full"><span>Outra plataforma</span><input name="other" type="url" placeholder="https://..."></label>
+        <label class="full"><span>Agendar divulgação</span><input name="schedule" type="datetime-local"><small>Deixe vazio para publicar agora. Se escolher uma data, a divulgação será publicada automaticamente.</small></label>
+      </div>
+      <div class="form-footer"><span>É obrigatório ter pelo menos um link.</span><button class="btn primary" type="submit">Publicar</button></div>
+    </form>
+  </div></div>
+
+  <div class="modal" id="collabModal" aria-hidden="true"><div class="modal-backdrop" data-close></div><div class="modal-card">
+    <button class="modal-close" data-close>×</button><div class="modal-head"><span class="eyebrow">COLABORAÇÃO</span><h2>Quem você procura?</h2></div>
+    <form id="collabForm"><div class="form-grid">
+      <label><span>Nome artístico *</span><input name="artist" required maxlength="100"></label>
+      <label><span>Procuro *</span><select name="looking" required><option value="">Selecione</option><option>Vocalista</option><option>Beatmaker</option><option>Produtor</option><option>Guitarrista</option><option>Compositor</option><option>Designer</option><option>Editor de vídeo</option><option>Outro</option></select></label>
+      <label><span>Estilo</span><input name="style" maxlength="80"></label><label><span>Cidade / Remoto</span><input name="location" maxlength="100"></label>
+      <label class="full"><span>Descrição *</span><textarea name="description" required rows="4" maxlength="1000"></textarea></label>
+    </div><div class="form-footer"><span>Publicado para a comunidade.</span><button class="btn primary" type="submit">Publicar</button></div></form>
+  </div></div>
+
+  <div class="modal" id="accountModal" aria-hidden="true"><div class="modal-backdrop" data-close></div><div class="modal-card">
+    <button class="modal-close" data-close>×</button><div class="profile-header"><img id="accountAvatar" class="account-avatar" alt=""><div><span id="accountRole" class="pro-badge">ARTISTA</span><h2 id="accountName">Minha conta</h2><p id="accountEmail"></p></div></div>
+    <div class="profile-stats"><div><b id="myReleases">0</b><span>lançamentos</span></div><div><b id="myClicks">0</b><span>cliques</span></div><div><b id="myCollabs">0</b><span>colaborações</span></div></div>
+    <div class="account-actions"><button class="btn primary" data-open-release>Publicar música</button><button class="btn secondary" id="logoutBtn">Sair</button></div>
+  </div></div>
+
+  <div class="modal" id="adminModal" aria-hidden="true"><div class="modal-backdrop" data-close></div><div class="modal-card admin-modal">
+    <button class="modal-close" data-close>×</button><div class="modal-head"><span class="eyebrow">ADMINISTRAÇÃO</span><h2>Painel da equipe</h2><p>Gerencie usuários e lançamentos da comunidade.</p></div>
+    <div class="admin-stats" id="adminStats"></div>
+    <div class="admin-tabs"><button class="filter active" data-admin-tab="releases">Lançamentos</button><button class="filter" data-admin-tab="users">Usuários</button></div>
+    <div id="adminContent" class="admin-content"></div>
+  </div></div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/config.js?v=7"></script>
+  <script src="/app.js?v=7"></script>
+</body>
+</html>
