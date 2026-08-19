@@ -279,38 +279,106 @@ def health():
     return {"ok": True}
 
 @app.post("/api/auth/google")
-def google_login(body: GoogleLogin, request: Request, response: Response):
+def google_login(
+    body: GoogleLogin,
+    request: Request,
+    response: Response
+):
     rate_limit_auth(request)
+
     try:
         info = id_token.verify_oauth2_token(
             body.credential,
-            google_requests.Request(),
+            google_request,
             GOOGLE_CLIENT_ID,
         )
-    except Exception:
-        raise HTTPException(401, "Login Google inválido.")
+
+    except google_auth_exceptions.TransportError as e:
+        # Falha temporária de comunicação ao validar com o Google.
+        # Não imprime credential/token nos logs.
+        print(
+            f"GOOGLE NETWORK ERROR: {type(e).__name__}: {e}",
+            flush=True
+        )
+
+        raise HTTPException(
+            status_code=503,
+            detail="Login temporariamente indisponível. Tente novamente."
+        )
+
+    except (ValueError, google_auth_exceptions.GoogleAuthError) as e:
+        # Token realmente recusado/inválido.
+        # Mantemos somente a causa técnica no log do servidor.
+        print(
+            f"GOOGLE TOKEN ERROR: {type(e).__name__}: {e}",
+            flush=True
+        )
+
+        raise HTTPException(
+            status_code=401,
+            detail="Login Google inválido."
+        )
+
+    except Exception as e:
+        # Evita que uma exceção inesperada derrube o endpoint.
+        print(
+            f"GOOGLE LOGIN UNEXPECTED ERROR: {type(e).__name__}: {e}",
+            flush=True
+        )
+
+        raise HTTPException(
+            status_code=503,
+            detail="Não foi possível entrar agora. Tente novamente."
+        )
 
     email = (info.get("email") or "").strip().lower()
+
     if not email or not info.get("email_verified"):
-        raise HTTPException(401, "O Google não confirmou este e-mail.")
+        raise HTTPException(
+            status_code=401,
+            detail="O Google não confirmou este e-mail."
+        )
 
     google_sub = info.get("sub")
-    if not google_sub:
-        raise HTTPException(401, "Conta Google inválida.")
 
-    existing = db.users.find_one({"google_sub": google_sub})
-    if existing and existing.get("blocked") and email != ADMIN_EMAIL:
-        raise HTTPException(403, "Conta bloqueada pelo administrador.")
+    if not google_sub:
+        raise HTTPException(
+            status_code=401,
+            detail="Conta Google inválida."
+        )
+
+    existing = db.users.find_one({
+        "google_sub": google_sub
+    })
+
+    if (
+        existing
+        and existing.get("blocked")
+        and email != ADMIN_EMAIL
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Conta bloqueada pelo administrador."
+        )
 
     role = "admin" if email == ADMIN_EMAIL else "artist"
     now = utcnow()
+
     db.users.update_one(
-        {"google_sub": google_sub},
+        {
+            "google_sub": google_sub
+        },
         {
             "$set": {
                 "email": email,
-                "name": clean_text(info.get("name"), 100),
-                "picture": clean_text(info.get("picture"), 500),
+                "name": clean_text(
+                    info.get("name"),
+                    100
+                ),
+                "picture": clean_text(
+                    info.get("picture"),
+                    500
+                ),
                 "role": role,
                 "last_login": now,
             },
@@ -321,8 +389,19 @@ def google_login(body: GoogleLogin, request: Request, response: Response):
         },
         upsert=True,
     )
-    user = db.users.find_one({"google_sub": google_sub})
+
+    user = db.users.find_one({
+        "google_sub": google_sub
+    })
+
+    if not user:
+        raise HTTPException(
+            status_code=500,
+            detail="Não foi possível concluir o login."
+        )
+
     token = create_token(user)
+
     response.set_cookie(
         key=COOKIE_NAME,
         value=token,
@@ -332,7 +411,10 @@ def google_login(body: GoogleLogin, request: Request, response: Response):
         samesite="lax",
         path="/api",
     )
-    return {"user": user_public(user)}
+
+    return {
+        "user": user_public(user)
+    }
 
 @app.post("/api/auth/logout")
 def logout(response: Response):
