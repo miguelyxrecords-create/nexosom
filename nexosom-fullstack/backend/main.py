@@ -46,9 +46,23 @@ if not JWT_SECRET or len(JWT_SECRET) < 32:
 if not ADMIN_EMAIL:
     raise RuntimeError("ADMIN_EMAIL não configurado.")
 
-client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=8000, tz_aware=True)
+client = MongoClient(
+    MONGODB_URI,
+    serverSelectionTimeoutMS=8000,
+    tz_aware=True
+)
+
 db = client[MONGODB_DB]
 covers = gridfs.GridFSBucket(db, bucket_name="covers")
+
+
+# Reutiliza e mantém em cache os certificados públicos do Google.
+# Isso evita buscar os certificados novamente em todo login.
+google_http_session = requests.Session()
+google_cached_session = cachecontrol.CacheControl(google_http_session)
+google_request = google_requests.Request(
+    session=google_cached_session
+)
 
 app = FastAPI(title="NexoSom API", version="1.0.0", docs_url=None, redoc_url=None)
 
