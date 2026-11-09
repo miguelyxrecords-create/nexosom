@@ -148,6 +148,7 @@ textarea { resize:vertical; }
 .release-actions { display:flex; gap:8px; }
 .icon-btn { flex:1; border:1px solid var(--line); background:rgba(255,255,255,.035); color:var(--text); padding:9px 10px; border-radius:10px; font-size:11px; font-weight:800; }
 .icon-btn:hover { background:rgba(255,255,255,.08); }
+.smart-link { display: flex; align-items: center; justify-content: center; }
 .schedule-badge { color:#1b1e13; background:var(--green); padding:5px 7px; border-radius:7px; font-size:9px; font-weight:900; height:max-content; }
 .empty-card { grid-column:1/-1; padding:45px; text-align:center; border:1px dashed var(--line); border-radius:20px; color:var(--muted); }
 
@@ -313,3 +314,15 @@ footer .brand { color:var(--text); }
   border-radius: 50%;
   place-items: center;
 }
+
+/* Páginas públicas de orientação */
+.seo-guide { max-width: 850px; margin: 0 auto; padding: 70px 24px; line-height: 1.8; }
+.seo-guide h1 { font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.15; margin: 18px 0; }
+.seo-guide section { margin: 36px 0; }
+.seo-guide h2 { font-size: 1.4rem; line-height: 1.35; }
+.seo-guide p { color: var(--muted); }
+.seo-intro { font-size: 1.15rem; }
+.seo-links { display: flex; flex-wrap: wrap; gap: 16px; }
+.seo-guide .seo-links { margin-top: 28px; }
+#siteFooter .seo-links { grid-column: 1 / -1; }
+.seo-links a { color: var(--green); text-decoration: underline; text-underline-offset: 4px; }

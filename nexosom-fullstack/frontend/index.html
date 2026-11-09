@@ -3,13 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Comunidade para artistas independentes divulgarem lançamentos, criarem Smart Links e encontrarem colaboradores." />
-  <title>NexoSom — Comunidade para artistas independentes</title>
+  <title>NexoSom | Divulgue sua música e encontre artistas</title>
+  <meta name="description" content="Divulgue lançamentos, crie Smart Links e encontre músicos e produtores para colaborar. Conheça a comunidade de artistas independentes NexoSom.">
+  <link rel="canonical" href="https://nexosom.netlify.app/">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="NexoSom">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="NexoSom | Divulgue sua música e encontre artistas">
+  <meta property="og:description" content="Divulgue lançamentos, crie Smart Links e encontre músicos e produtores para colaborar. Conheça a comunidade de artistas independentes NexoSom.">
+  <meta property="og:url" content="https://nexosom.netlify.app/">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "NexoSom",
+      "url": "https://nexosom.netlify.app/",
+      "inLanguage": "pt-BR"
+    }
+  </script>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/styles.css?v=8" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
@@ -108,9 +126,13 @@
     <section class="section cta-section"><div><span class="eyebrow">SEU PRÓXIMO PÚBLICO PODE ESTAR AQUI</span><h2>Publique. Conecte. Cresça.</h2><p>Entre com Google e publique seu próximo lançamento.</p></div><button class="btn primary large" data-open-release>Divulgar minha música</button></section>
   </main>
 
-  <section id="smartPublicPage" class="smart-public hidden"></section>
-
-  <footer id="siteFooter"><a class="brand" href="/"><span class="brand-mark"><span></span><span></span><span></span></span><strong>NexoSom</strong></a><p>Comunidade independente para músicos, produtores e criadores.</p><small>O site não distribui nem hospeda áudio.</small></footer>
+  <footer id="siteFooter"><a class="brand" href="/"><span class="brand-mark"><span></span><span></span><span></span></span><strong>NexoSom</strong></a><p>Comunidade independente para músicos, produtores e criadores.</p><small>O site não distribui nem hospeda áudio.</small>
+    <nav class="seo-links" aria-label="Guias do NexoSom">
+      <a href="/divulgar-musica/">Como divulgar sua música independente</a>
+      <a href="/smart-link-musical/">Smart Link musical para reunir suas plataformas</a>
+      <a href="/colaboracoes-musicais/">Colaborações musicais entre artistas e produtores</a>
+    </nav>
+  </footer>
 
   <div class="modal" id="loginModal" aria-hidden="true"><div class="modal-backdrop" data-close></div><div class="modal-card login-card">
     <button class="modal-close" data-close>×</button><div class="modal-head"><span class="eyebrow">ENTRAR</span><h2>Acesse com Google</h2><p>Entre com sua conta Google para continuar.</p></div>
@@ -164,6 +186,6 @@
   <div class="toast" id="toast"></div>
 
   <script src="/config.js?v=7"></script>
-  <script src="/app.js?v=7"></script>
+  <script src="/app.js?v=8"></script>
 </body>
 </html>

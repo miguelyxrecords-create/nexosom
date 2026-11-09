@@ -65,10 +65,12 @@ async function request(path, options = {}) {
       renderAuth();
     }
 
-    throw new Error(
+    const error = new Error(
       data?.detail ||
       "Não foi possível concluir esta operação."
     );
+    error.status = res.status;
+    throw error;
   }
 
   return data;
@@ -167,7 +169,11 @@ function platformLabel(key) {
 
 
 function smartUrl(slug) {
-  return `${location.origin}/s/${encodeURIComponent(slug)}`;
+  return new URL(smartPath(slug), location.origin).href;
+}
+
+function smartPath(slug) {
+  return `/s/${encodeURIComponent(slug)}`;
 }
 
 
@@ -375,12 +381,7 @@ async function loadReleases() {
                   ♡ ${r.likes || 0}
                 </button>
 
-                <button
-                  class="icon-btn smart-btn"
-                  data-slug="${escapeHtml(r.slug)}"
-                >
-                  Smart Link
-                </button>
+                <a class="icon-btn smart-link" href="${smartPath(r.slug)}">Smart Link</a>
 
                 <button
                   class="icon-btn share-btn"
@@ -875,45 +876,46 @@ async function interest(id) {
    SMART LINK PÚBLICO
 ========================================= */
 
-async function renderSmartLink(slug) {
+function setSmartLinkMetadata(release, slug, coverUrl) {
+  const title = `${release.title} — ${release.artist} | NexoSom`;
+  const description = `Ouça ${release.title}, de ${release.artist}. Escolha sua plataforma favorita no NexoSom.`;
+  const canonical = new URL(smartPath(slug), "https://nexosom.netlify.app").href;
+  const meta = [
+    ["name", "description", description],
+    ["property", "og:title", title],
+    ["property", "og:description", description],
+    ["property", "og:url", canonical],
+    ["property", "og:type", "music.song"]
+  ];
+  if (coverUrl) {
+    meta.push(["property", "og:image", new URL(coverUrl, location.origin).href]);
+  }
 
-  /* Esconde partes do site normal */
-  $("#mainSite")
-    .classList
-    .add("hidden");
+  document.title = title;
+  for (const [attribute, key, content] of meta) {
+    const tag = document.createElement("meta");
+    tag.setAttribute(attribute, key);
+    tag.content = content;
+    document.head.append(tag);
+  }
 
-  $("#siteFooter")
-    .classList
-    .add("hidden");
-
-  /* Esconde o menu somente no Smart Link */
-  $(".topbar")
-    .classList
-    .add("hidden");
-
-
-  const page =
-    $("#smartPublicPage");
-
-  page
-    .classList
-    .remove("hidden");
-
-
-  page.innerHTML = `
-    <div class="smart-public-card">
-      Carregando...
-    </div>
-  `;
+  const link = document.createElement("link");
+  link.rel = "canonical";
+  link.href = canonical;
+  document.head.append(link);
+}
 
 
+async function renderSmartLink(encodedSlug, page) {
+  let slug;
   try {
+    slug = decodeURIComponent(encodedSlug);
+    if (!slug) throw new Error("Confira o endereço do lançamento.");
+    if (!API) throw new Error("Serviço temporariamente indisponível.");
 
-    const r =
-      await request(
-        `/s/${encodeURIComponent(slug)}`
-      );
-
+    const r = await request(smartPath(slug));
+    const coverUrl = apiPath(r.cover_url);
+    setSmartLinkMetadata(r, r.slug || slug, coverUrl);
 
     const buttons =
       Object.entries(
@@ -961,15 +963,7 @@ async function renderSmartLink(slug) {
         </a>
 
 
-        <img
-          class="public-cover"
-          src="${escapeHtml(
-            apiPath(r.cover_url)
-          )}"
-          alt="Capa de ${escapeHtml(
-            r.title
-          )}"
-        >
+        ${coverUrl ? `<img class="public-cover" src="${escapeHtml(coverUrl)}" alt="Capa de ${escapeHtml(r.title)}">` : ""}
 
 
         <span class="eyebrow">
@@ -1003,12 +997,17 @@ async function renderSmartLink(slug) {
     `;
 
   } catch (e) {
-
+    const notFound = !slug || e.status === 404;
+    const title = notFound ? "Smart Link não encontrado" : "Lançamento indisponível";
+    document.title = `${title} | NexoSom`;
+    if (notFound) {
+      $('meta[name="robots"]').content = "noindex,follow";
+    }
     page.innerHTML = `
       <div class="smart-public-card">
 
         <h1>
-          Smart Link não encontrado
+          ${title}
         </h1>
 
         <p>
@@ -1323,21 +1322,6 @@ document.addEventListener(
     }
 
 
-    /* Smart Link */
-    const smartBtn =
-      e.target.closest(
-        ".smart-btn"
-      );
-
-    if (smartBtn) {
-
-      location.href =
-        smartUrl(
-          smartBtn.dataset.slug
-        );
-    }
-
-
     /* Compartilhar */
     const share =
       e.target.closest(
@@ -1494,7 +1478,7 @@ document.addEventListener(
 ========================================= */
 
 $("#accountBtn")
-  .addEventListener(
+  ?.addEventListener(
     "click",
     () => {
 
@@ -1508,14 +1492,14 @@ $("#accountBtn")
 
 
 $("#adminBtn")
-  .addEventListener(
+  ?.addEventListener(
     "click",
     () => openAdmin()
   );
 
 
 $("#logoutBtn")
-  .addEventListener(
+  ?.addEventListener(
     "click",
     async () => {
 
@@ -1538,14 +1522,14 @@ $("#logoutBtn")
 
 
 $("#releaseForm")
-  .addEventListener(
+  ?.addEventListener(
     "submit",
     submitRelease
   );
 
 
 $("#collabForm")
-  .addEventListener(
+  ?.addEventListener(
     "submit",
     submitCollab
   );
@@ -1583,7 +1567,7 @@ $$(".filter[data-genre]")
 
 
 $("#musicSearch")
-  .addEventListener(
+  ?.addEventListener(
     "input",
     () => {
 
@@ -1616,30 +1600,18 @@ document.addEventListener(
 ========================================= */
 
 (async function boot() {
+  const smartPage = $("#smartPublicPage");
+  if (smartPage) {
+    const path = location.pathname;
+    const slug = path.startsWith("/s/") ? path.slice(3).replace(/\/+$/, "") : "";
+    await renderSmartLink(slug, smartPage);
+    return;
+  }
 
   if (!API) {
 
     toast(
       "Serviço temporariamente indisponível."
-    );
-
-    return;
-  }
-
-
-  const path =
-    location.pathname;
-
-
-  /* Smart Link público */
-  if (
-    path.startsWith("/s/")
-  ) {
-
-    await renderSmartLink(
-      decodeURIComponent(
-        path.slice(3)
-      )
     );
 
     return;

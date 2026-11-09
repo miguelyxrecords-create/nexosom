@@ -25,7 +25,7 @@ writeFileSync(
 
 writeFileSync(
   "frontend/_redirects",
-  `/api/*  ${apiOrigin}/api/:splat  200\n/s/*    /index.html  200\n/*      /index.html  200\n`,
+  `/api/*  ${apiOrigin}/api/:splat  200\n/s/*    /smart.html  200\n`,
   "utf8"
 );
 

@@ -1,5 +1,4 @@
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
-from pathlib import Path
 from urllib.parse import urlparse
 
 
@@ -11,19 +10,12 @@ class SPAHandler(SimpleHTTPRequestHandler):
         self.send_header("Expires", "0")
         super().end_headers()
 
-    def do_GET(self):
-        url_path = urlparse(self.path).path
-        local_path = Path(self.translate_path(url_path))
+    def send_head(self):
+        # Serve o mesmo HTML que o Netlify usa para os Smart Links.
+        if urlparse(self.path).path.startswith("/s/"):
+            self.path = "/smart.html"
 
-        # Rotas do frontend, como /s/nome-da-musica,
-        # devem carregar o index.html.
-        if url_path.startswith("/s/"):
-            self.path = "/index.html"
-
-        elif not local_path.exists() and "." not in Path(url_path).name:
-            self.path = "/index.html"
-
-        return super().do_GET()
+        return super().send_head()
 
 
 print("NexoSom frontend: http://localhost:5500")
